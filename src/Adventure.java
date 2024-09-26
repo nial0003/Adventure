@@ -2,6 +2,12 @@ import java.util.Scanner;
 
 public class Adventure {
     private Room currentRoom;
+    private UserInterface ui;
+
+    public Adventure(UserInterface ui) {
+        this.ui = ui;
+        createMap();
+    }
 
     public void createMap() {
         // Instansiere alle rummene
@@ -51,12 +57,10 @@ public class Adventure {
     }
 
     public void roomNavigation() {
-        createMap();
         boolean running = true;
         while (running) {
-            System.out.print("\n\n what will you do?: ");
-            Scanner sc = new Scanner(System.in);
-            String action = sc.next();
+            System.out.print("\n\nwhat will you do?: ");
+            String action = ui.getInput();
 
             switch (action.toLowerCase()) {
                 case "north", "n", "go north" -> move("north", currentRoom.getNorthRoom());
@@ -64,8 +68,7 @@ public class Adventure {
                 case "south", "s", "go south" -> move("south", currentRoom.getSouthRoom());
                 case "west", "w", "go west" -> move("west", currentRoom.getWestRoom());
                 case "look" -> System.out.println(currentRoom.getDescription());
-                case "help" ->
-                        System.out.println("For navigation write north, south, west, east.\nTo exit write: exit");
+                case "help" -> ui.displayHelp();
                 case "exit" -> running = false;
                 default ->
                         System.out.println("You've not entered an invalid command, please type help to see valid commands");
@@ -75,7 +78,7 @@ public class Adventure {
 
     public void move(String direction, Room nextRoom) {
         if (nextRoom == null) {
-            System.out.println("You way " + direction + " is blocked!");
+            System.out.println("The way " + direction + " is blocked!");
         } else {
             currentRoom = nextRoom;
             System.out.println("You went " + direction + "! \n" + currentRoom.getDescription());

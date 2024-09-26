@@ -1,6 +1,7 @@
 public class Main {
     public static void main(String[] args) {
-        Adventure adventure = new Adventure();
+        UserInterface ui = new UserInterface();
+        Adventure adventure = new Adventure(ui);
         System.out.println("Welcome to the game.\nYou're an adventurer called Brutus! You've heard of a magical forest" +
                 "\nin which, in the middle, exists a magical elf society filled with magical artifacts and treasures." +
                 "\nYou've walked for what feels like hours through thick brush and brambles until you finally reach" +
