@@ -6,7 +6,7 @@ public class Adventure {
 
     public Adventure(UserInterface ui) {
         this.ui = ui;
-        this.player = new Player(ui);
+        this.player = new Player();
     }
 
     public void roomNavigation() {
@@ -16,10 +16,10 @@ public class Adventure {
             String action = ui.getInput();
 
             switch (action.toLowerCase()) {
-                case "north", "n", "go north" -> player.move("north", player.getCurrentRoom().getNorthRoom());
-                case "east", "e", "go east" -> player.move("east", player.getCurrentRoom().getEastRoom());
-                case "south", "s", "go south" -> player.move("south", player.getCurrentRoom().getSouthRoom());
-                case "west", "w", "go west" -> player.move("west", player.getCurrentRoom().getWestRoom());
+                case "north", "n", "go north" -> player.move("north", player.getCurrentRoom().getNorthRoom(), ui);
+                case "east", "e", "go east" -> player.move("east", player.getCurrentRoom().getEastRoom(), ui);
+                case "south", "s", "go south" -> player.move("south", player.getCurrentRoom().getSouthRoom(), ui);
+                case "west", "w", "go west" -> player.move("west", player.getCurrentRoom().getWestRoom(),ui );
                 case "look" -> ui.message(player.getCurrentRoom().getDescription());
                 case "help" -> ui.displayHelp();
                 case "exit" -> running = false;
