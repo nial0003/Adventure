@@ -13,7 +13,7 @@ public class Adventure {
     public void roomNavigation() {
         boolean running = true;
         while (running) {
-            System.out.print("\n\nwhat will you do?: ");
+            ui.messageSameLine("\n\nwhat will you do?: ");
             String action = ui.getInput();
 
             switch (action.toLowerCase()) {

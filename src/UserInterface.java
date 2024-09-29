@@ -35,4 +35,8 @@ public class UserInterface {
     public void message(String message){
         System.out.println(message);
     }
+
+    public void messageSameLine(String message){
+        System.out.print(message);
+    }
 }
