@@ -4,9 +4,10 @@ public class Adventure {
     private UserInterface ui;
     private Player player;
 
-    public Adventure(UserInterface ui) {
-        this.ui = ui;
+    public Adventure() {
+        this.ui = new UserInterface();
         this.player = new Player();
+        ui.gameDescription();
     }
 
     public void roomNavigation() {
