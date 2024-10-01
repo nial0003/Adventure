@@ -1,11 +1,15 @@
+import java.util.ArrayList;
+
 public class Player {
     private Map map;
     private Room currentRoom;
+    private ArrayList<Item> inventory;
 
-    public Player(){
+    public Player() {
         this.map = new Map();
         map.createMap();
         currentRoom = map.getCurrentRoom();
+        this.inventory = new ArrayList<>();
     }
 
     public Room getCurrentRoom() {
@@ -19,5 +23,43 @@ public class Player {
             currentRoom = nextRoom;
             ui.message("You went " + direction + "! \n" + currentRoom.getDescription());
         }
+    }
+
+    public void pickupItem(String itemName, UserInterface ui) {
+        Item item = currentRoom.findItem(itemName);
+        if (item != null) {
+            inventory.add(item);
+            currentRoom.removeItem(item);
+            ui.message("You picked up: " + item.getName());
+        } else {
+            ui.message("Item '" + itemName + "' not found in this room.");
+        }
+    }
+
+    public void dropItem(String itemName, UserInterface ui) {
+        Item item = findItemInInventory(itemName);
+        if (item != null) {
+            inventory.remove(item);
+            currentRoom.addItem(item);
+            ui.message("You dropped: " + item.getName());
+        } else {
+            ui.message("you don't have the item '" + itemName + "' in your inventory.");
+        }
+    }
+
+    public void showInventory(UserInterface ui) {
+        ui.message("These items are in your inventory:");
+        for (Item item : inventory) {
+            ui.message(item.getDescription());
+        }
+    }
+
+    private Item findItemInInventory(String itemName) {
+        for (Item item : inventory) {
+            if (item.getName().equalsIgnoreCase(itemName)) {
+                return item;
+            }
+        }
+        return null;
     }
 }

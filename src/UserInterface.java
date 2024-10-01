@@ -18,6 +18,9 @@ public class UserInterface {
                 "south, s, go south - move south\n" +
                 "east, e, go east - move east\n" +
                 "look - show description for current room\n" +
+                "Take <item> - take an item from the room\n" +
+                "drop <item> - drop an item in the room \n" +
+                "inventory, inv, invent - display player inventory" +
                 "help - shows available commands\n" +
                 "exit - exits the program");
     }
@@ -32,11 +35,11 @@ public class UserInterface {
                 "\nYou're sure you're on the right track!");
     }
 
-    public void message(String message){
+    public void message(String message) {
         System.out.println(message);
     }
 
-    public void messageSameLine(String message){
+    public void messageSameLine(String message) {
         System.out.print(message);
     }
 }

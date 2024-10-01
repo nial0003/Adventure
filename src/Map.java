@@ -45,6 +45,11 @@ public class Map {
         room9.setNorthRoom(room6);
         room9.setWestRoom(room8);
 
+        room1.addItem(new Item("Lamp", "A shiny brass lamp."));
+        room3.addItem(new Item("Sword", "A sharp pointy sword."));
+        room4.addItem(new Item("Axe", "A woodcutting axe."));
+        room9.addItem(new Item("Shield", "A wooden shield."));
+
         currentRoom = room1;
     }
 
