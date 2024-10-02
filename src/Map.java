@@ -1,5 +1,4 @@
 public class Map {
-    private Room currentRoom;
 
     public Room createMap() {
         // Instansiere alle rummene
@@ -51,9 +50,5 @@ public class Map {
         room9.addItem(new Item("Shield", "A wooden shield."));
 
         return room1;
-    }
-
-    public Room getCurrentRoom() {
-        return currentRoom;
     }
 }
