@@ -30,7 +30,14 @@ public class Adventure {
                 case "west", "w" -> player.move("west", player.getCurrentRoom().getWestRoom(), ui);
 
                 case "inventory", "inv", "invent" -> player.showInventory(ui);
-
+                case "look"-> {
+                    ui.message(player.getCurrentRoom().getDescription());
+                    if (player.getCurrentRoom().getItemsOnTheGround() != null) {
+                        for (Item item : player.getCurrentRoom().getItemsOnTheGround()) {
+                            ui.message(item.getDescription() + " is in the room");
+                        }
+                    }
+                }
                 case "take" -> {
                     if (!parameter.isEmpty()) {
                         player.pickupItem(parameter, ui);
@@ -54,7 +61,6 @@ public class Adventure {
         }
     }
 
-    // A helper method to handle movement when using "go" commands like "go north"
     private void handleMovement(String direction, Player player, UserInterface ui) {
         switch (direction) {
             case "north", "n" -> player.move("north", player.getCurrentRoom().getNorthRoom(), ui);
