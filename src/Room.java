@@ -1,8 +1,8 @@
 import java.util.ArrayList;
 
 public class Room {
-    private String name;
-    private String description;
+    private String roomName;
+    private String roomDescription;
     private Room northRoom;
     private Room southRoom;
     private Room westRoom;
@@ -10,8 +10,8 @@ public class Room {
     private ArrayList<Item> itemsOnTheGround;
 
     public Room(String name, String description) {
-        this.name = name;
-        this.description = description;
+        this.roomName = name;
+        this.roomDescription = description;
         this.itemsOnTheGround = new ArrayList<>();
     }
 
@@ -47,12 +47,12 @@ public class Room {
         return eastRoom;
     }
 
-    public String getDescription() {
-        return description;
+    public String getRoomDescription() {
+        return roomDescription;
     }
 
-    public String getName() {
-        return name;
+    public String getRoomName() {
+        return roomName;
     }
 
     public void addItem(Item item) {
@@ -69,7 +69,7 @@ public class Room {
 
     public Item findItem(String itemName) {
         for (Item item : itemsOnTheGround) {
-            if (item.getName().equalsIgnoreCase(itemName)) {
+            if (item.getItemName().equalsIgnoreCase(itemName)) {
                 return item;
             }
         }

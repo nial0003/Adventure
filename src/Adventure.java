@@ -1,17 +1,18 @@
-import java.util.Scanner;
-
 public class Adventure {
-    private UserInterface ui;
-    private Player player;
+    //private UserInterface ui;
+    //private Player player;
 
     public Adventure() {
-        this.ui = new UserInterface();
-        this.player = new Player();
-        ui.gameDescription();
+        //this.ui = new UserInterface();
+        //this.player = new Player();
+        //ui.gameDescription();
         roomNavigation();
     }
 
     public void roomNavigation() {
+        UserInterface ui = new UserInterface();
+        Player player = new Player();
+        ui.gameDescription();
         boolean running = true;
         while (running) {
             ui.messageSameLine("\n\nwhat will you do?: ");
@@ -31,10 +32,10 @@ public class Adventure {
 
                 case "inventory", "inv", "invent" -> player.showInventory(ui);
                 case "look"-> {
-                    ui.message(player.getCurrentRoom().getDescription());
+                    ui.message(player.getCurrentRoom().getRoomDescription());
                     if (player.getCurrentRoom().getItemsOnTheGround() != null) {
                         for (Item item : player.getCurrentRoom().getItemsOnTheGround()) {
-                            ui.message(item.getDescription() + " is in the room");
+                            ui.message(item.getItemDescription() + " is in the room");
                         }
                     }
                 }
