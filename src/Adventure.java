@@ -8,6 +8,7 @@ public class Adventure {
         this.ui = new UserInterface();
         this.player = new Player();
         ui.gameDescription();
+        roomNavigation();
     }
 
     public void roomNavigation() {

@@ -1,7 +1,7 @@
 public class Map {
     private Room currentRoom;
 
-    public void createMap() {
+    public Room createMap() {
         // Instansiere alle rummene
         Room room1 = new Room("room 1", "A clearing with thick tree walls all around you except for 2 ways. \nYou can see the sky");
         Room room2 = new Room("room 2", "A stream is running through this area. There is still light above, but it's dimmer. \nThere are 2 ways");
@@ -50,7 +50,7 @@ public class Map {
         room4.addItem(new Item("Axe", "A woodcutting axe."));
         room9.addItem(new Item("Shield", "A wooden shield."));
 
-        currentRoom = room1;
+        return room1;
     }
 
     public Room getCurrentRoom() {

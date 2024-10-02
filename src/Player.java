@@ -7,8 +7,7 @@ public class Player {
 
     public Player() {
         this.map = new Map();
-        map.createMap();
-        currentRoom = map.getCurrentRoom();
+        currentRoom = map.createMap();
         this.inventory = new ArrayList<>();
     }
 
