@@ -63,8 +63,15 @@ public class Room {
         itemsOnTheGround.remove(item);
     }
 
-    public ArrayList<Item> getItemsOnTheGround() {
-        return itemsOnTheGround;
+    public String getItemsOnTheGround() {
+        if (itemsOnTheGround != null){
+            String onTheGround = "On the ground you find:";
+            for (Item item : itemsOnTheGround){
+                onTheGround += "\n" + item.getItemDescription();
+            }
+            return onTheGround;
+        }
+        return null;
     }
 
     public Item findItem(String itemName) {
@@ -84,5 +91,16 @@ public class Room {
             case "west", "w" -> westRoom;
             default -> null;
         };
+    }
+
+    public Boolean transferItemToPlayer(String itemName, ArrayList<Item> inventory){
+        Item item = findItem(itemName);
+        if (item != null){
+            inventory.add(item);
+            itemsOnTheGround.remove(item);
+            return true;
+        } else {
+            return false;
+        }
     }
 }

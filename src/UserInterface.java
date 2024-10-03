@@ -2,13 +2,74 @@ import java.util.Scanner;
 
 public class UserInterface {
     private Scanner sc;
+    private AdventureCont adventureCont;
 
     public UserInterface() {
         sc = new Scanner(System.in);
+        adventureCont = new AdventureCont();
+        roomNavigation();
     }
 
-    public String getInput() {
-        return sc.nextLine();
+    public void roomNavigation() {
+        gameDescription();
+        boolean running = true;
+        while (running) {
+            System.out.print("\n\nwhat will you do?: ");
+            String input = sc.nextLine();
+            String[] command = input.split(" ", 2);
+
+            String action = command[0];
+            String parameter = (command.length > 1) ? command[1] : "";
+
+            switch (action) {
+                case "go" -> handleMovement(parameter); // Handle multi-word "go" commands like "go north"
+
+                case "north", "n", "east", "e", "south", "s", "west", "w" ->
+                        System.out.println(adventureCont.moveToAdjacentRoom(action));
+
+                case "inventory", "inv", "invent" -> System.out.println(adventureCont.showInventory());
+                case "look" -> {
+                    System.out.println(adventureCont.getCurrentRoomDescription());
+                    if (adventureCont.getItemsOnTheGround() != null) {
+                        System.out.println(adventureCont.getItemsOnTheGround());
+                    }
+                }
+                case "take" -> {
+                    if (!parameter.isEmpty()) {
+                        if (adventureCont.doesItemExist(action,parameter)) {
+                            System.out.println(adventureCont.takeOrDropItem(action, parameter));
+                        }
+                    } else {
+                        System.out.println("Specify an item to take.");
+                    }
+                }
+
+                case "drop" -> {
+                    if (!parameter.isEmpty()) {
+                        if (adventureCont.doesItemExist(action, parameter)) {
+                            System.out.println(adventureCont.takeOrDropItem(action, parameter));
+                        }
+                    } else {
+                        System.out.println("Specify an item to drop.");
+                    }
+                }
+
+                case "eat" -> System.out.println(eat(parameter));
+
+                case "help" -> displayHelp();
+                case "exit" -> running = false;
+                default -> System.out.println("Invalid command, please type 'help' to see valid commands.");
+            }
+        }
+    }
+
+    private void handleMovement(String direction) {
+        switch (direction) {
+            case "north", "n", "east", "e", "south", "s", "west", "w" ->
+                    System.out.println(adventureCont.moveToAdjacentRoom(direction));
+            default ->
+                    System.out.println("Unknown direction. Try 'north', 'south', 'east', 'west' or 'n', 's', 'e', 'w'.");
+        }
     }
 
     public void displayHelp() {
@@ -35,11 +96,11 @@ public class UserInterface {
                 "\nYou're sure you're on the right track!");
     }
 
-    public void message(String message) {
-        System.out.println(message);
-    }
-
-    public void messageSameLine(String message) {
-        System.out.print(message);
+    public String eat(String parameter){
+        return switch (adventureCont.isItFood(parameter)){
+            case Status.ISFOOD -> adventureCont.eat(Status.ISFOOD, parameter);
+            case Status.ISNOTFOOD -> adventureCont.eat(Status.ISNOTFOOD, parameter);
+            default -> adventureCont.eat(Status.ISNOTFOUND, parameter);
+        };
     }
 }

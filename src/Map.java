@@ -45,8 +45,14 @@ public class Map {
         room9.setWestRoom(room8);
 
         room1.addItem(new Item("Lamp", "A shiny brass lamp."));
+        room1.addItem(new Food("Apple", "A juicy red apple.", 10));
+
         room3.addItem(new Item("Sword", "A sharp pointy sword."));
+        room3.addItem(new Food("Bacon", "Nice crispy bacon.", 15));
+
         room4.addItem(new Item("Axe", "A woodcutting axe."));
+        room4.addItem(new Food("Apple", "Ordinary looking green apple.", -8));
+
         room9.addItem(new Item("Shield", "A wooden shield."));
 
         return room1;
