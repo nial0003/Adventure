@@ -1,6 +1,6 @@
-public class Adventure {
+public class AdventureGameFlow {
 
-    public Adventure() {
+    public AdventureGameFlow() {
         roomNavigation();
     }
 
@@ -20,13 +20,10 @@ public class Adventure {
             switch (action) {
                 case "go" -> handleMovement(parameter, player, ui); // Handle multi-word "go" commands like "go north"
 
-                case "north", "n" -> player.move("north", player.getCurrentRoom().getNorthRoom(), ui);
-                case "east", "e" -> player.move("east", player.getCurrentRoom().getEastRoom(), ui);
-                case "south", "s" -> player.move("south", player.getCurrentRoom().getSouthRoom(), ui);
-                case "west", "w" -> player.move("west", player.getCurrentRoom().getWestRoom(), ui);
+                case "north", "n", "east", "e", "south", "s", "west", "w" -> player.moveToAdjacentRoom(action, ui);
 
                 case "inventory", "inv", "invent" -> player.showInventory(ui);
-                case "look"-> {
+                case "look" -> {
                     ui.message(player.getCurrentRoom().getRoomDescription());
                     if (player.getCurrentRoom().getItemsOnTheGround() != null) {
                         for (Item item : player.getCurrentRoom().getItemsOnTheGround()) {
@@ -59,10 +56,7 @@ public class Adventure {
 
     private void handleMovement(String direction, Player player, UserInterface ui) {
         switch (direction) {
-            case "north", "n" -> player.move("north", player.getCurrentRoom().getNorthRoom(), ui);
-            case "south", "s" -> player.move("south", player.getCurrentRoom().getSouthRoom(), ui);
-            case "east", "e" -> player.move("east", player.getCurrentRoom().getEastRoom(), ui);
-            case "west", "w" -> player.move("west", player.getCurrentRoom().getWestRoom(), ui);
+            case "north", "n", "east", "e", "south", "s", "west", "w" -> player.moveToAdjacentRoom(direction, ui);
             default -> ui.message("Unknown direction. Try 'north', 'south', 'east', 'west' or 'n', 's', 'e', 'w'.");
         }
     }

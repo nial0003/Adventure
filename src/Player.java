@@ -15,13 +15,18 @@ public class Player {
         return currentRoom;
     }
 
-    public void move(String direction, Room nextRoom, UserInterface ui) {
+    private void move(String direction, Room nextRoom, UserInterface ui) {
         if (nextRoom == null) {
             ui.message("The way " + direction + " is blocked!");
         } else {
             currentRoom = nextRoom;
             ui.message("You went " + direction + "! \n" + currentRoom.getRoomDescription());
         }
+    }
+
+    public void moveToAdjacentRoom(String direction, UserInterface ui){
+        Room nextRoom = currentRoom.getAdjacentRoom(direction);
+        move(direction, nextRoom, ui);
     }
 
     public void pickupItem(String itemName, UserInterface ui) {

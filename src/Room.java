@@ -75,4 +75,14 @@ public class Room {
         }
         return null;
     }
+
+    public Room getAdjacentRoom(String direction){
+        return switch (direction) {
+            case "north", "n" -> northRoom;
+            case "east", "e" -> eastRoom;
+            case "south", "s" -> southRoom;
+            case "west", "w" -> westRoom;
+            default -> null;
+        };
+    }
 }
