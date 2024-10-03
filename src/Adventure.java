@@ -1,11 +1,6 @@
 public class Adventure {
-    //private UserInterface ui;
-    //private Player player;
 
     public Adventure() {
-        //this.ui = new UserInterface();
-        //this.player = new Player();
-        //ui.gameDescription();
         roomNavigation();
     }
 
