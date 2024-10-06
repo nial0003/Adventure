@@ -145,17 +145,24 @@ public class Player {
             }
         } else if (itemOnTheGround != null) {
             if (status == Status.ISFOOD){
-                if (life == 50){
-                    currentRoom.removeItem(itemOnTheGround);
-                    return "You just ate a " + itemOnTheGround.getItemName() + " but were already on max HP";
-                } else if (life < 50){
-                    Food food = (Food) itemOnTheGround;
+                Food food = (Food) itemOnTheGround;
+                if (food.getHealthOrDamage() < 0){
                     life += food.getHealthOrDamage();
-                    if (life > 50){
-                        life = 50;
-                        return "You just ate: " + itemOnTheGround.getItemName() + " and is now on max HP";
+                    String s = "You've eaten poison food and taken " + food.getHealthOrDamage() + " points of damage and is now on " + life + "HP";
+                    currentRoom.removeItem(itemOnTheGround);
+                    return s;
+                } else {
+                    if (life == 50){
+                        currentRoom.removeItem(itemOnTheGround);
+                        return "You just ate a " + itemOnTheGround.getItemName() + " but were already on max HP";
+                    } else if (life < 50){
+                        life += food.getHealthOrDamage();
+                        if (life > 50){
+                            life = 50;
+                            return "You just ate: " + itemOnTheGround.getItemName() + " and is now on max HP";
+                        }
+                        return "You ate: " + itemOnTheGround.getItemName() + " and changed your life with: " + food.getHealthOrDamage() + " and is now on: " + life + "HP";
                     }
-                    return "You ate: " + itemOnTheGround.getItemName() + " and changed your life with: " + food.getHealthOrDamage() + " and is now on: " + life + "HP";
                 }
             } else {
                 return "You can't eat a " + itemOnTheGround.getItemName() + " you doughnut!";
