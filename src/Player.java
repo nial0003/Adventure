@@ -5,6 +5,7 @@ public class Player {
     private Room currentRoom;
     private ArrayList<Item> inventory;
     private int life;
+    private Weapon rightHand;
 
     public Player() {
         this.map = new Map();
@@ -17,12 +18,12 @@ public class Player {
         return currentRoom;
     }
 
-    public String getItemsOnTheGround(){
+    public String getItemsOnTheGround() {
         return currentRoom.getItemsOnTheGround();
     }
 
-    public String getCurrentRoomDescription(){
-        return currentRoom.getRoomDescription();
+    public String getCurrentRoomDescription() {
+        return currentRoom.getLongRoomDescription();
     }
 
     private String move(String direction, Room nextRoom) {
@@ -30,7 +31,7 @@ public class Player {
             return "The way " + direction + " is blocked!";
         } else {
             currentRoom = nextRoom;
-            return "You went " + direction + "! \n" + currentRoom.getRoomDescription();
+            return "You went " + direction + "! \n" + currentRoom.getLongRoomDescription();
         }
     }
 
@@ -39,21 +40,18 @@ public class Player {
         return move(direction, nextRoom);
     }
 
-    public Boolean doesItemExist(String action, String itemName){
-        if (action.equalsIgnoreCase("take")){
+    public Boolean doesItemExist(String action, String itemName) {
+        if (action.equalsIgnoreCase("take")) {
             Item item = currentRoom.findItem(itemName);
-            if (item == null){
-                return false;
-            } else {
-                return true;
-            }
+            return item != null;
+        } else if (action.equalsIgnoreCase("equip")) {
+            Item weapon = findItemInInventory(itemName);
+            return weapon instanceof Weapon;
+        } else if (action.equalsIgnoreCase("unequip")) {
+            return rightHand != null;
         } else {
             Item item = findItemInInventory(itemName);
-            if (item == null){
-                return false;
-            } else {
-                return true;
-            }
+            return item != null;
         }
     }
 
@@ -80,11 +78,18 @@ public class Player {
 
     public String showInventory() {
         if (inventory.isEmpty()) {
-            return "There are no items in your inventory.";
+            String s = "There are no items in your inventory.";
+            if (rightHand != null) {
+                s += "\n\nYou currently have: " + rightHand.getItemName() + " equipped.";
+            }
+            return s;
         } else {
             String s = "These items are in your inventory:";
             for (Item item : inventory) {
                 s += "\n" + item.getItemDescription();
+            }
+            if (rightHand != null) {
+                s += "\n\nYou currently have: " + rightHand.getItemName() + " equipped.";
             }
             return s;
         }
@@ -103,17 +108,17 @@ public class Player {
         return life;
     }
 
-    public Enum isItFood(String foodItem){
+    public Enum isItFood(String foodItem) {
         Item itemInInventory = findItemInInventory(foodItem);
         Item itemOnTheGround = currentRoom.findItem(foodItem);
         if (itemInInventory != null) {
-            if (itemInInventory instanceof Food){
+            if (itemInInventory instanceof Food) {
                 return Status.ISFOOD;
             } else {
                 return Status.ISNOTFOOD;
             }
         } else if (itemOnTheGround != null) {
-            if (itemOnTheGround instanceof Food){
+            if (itemOnTheGround instanceof Food) {
                 return Status.ISFOOD;
             } else {
                 return Status.ISNOTFOOD;
@@ -123,18 +128,18 @@ public class Player {
         }
     }
 
-    public String eat(Status status, String foodItem){
+    public String eat(Status status, String foodItem) {
         Item itemInInventory = findItemInInventory(foodItem);
         Item itemOnTheGround = currentRoom.findItem(foodItem);
-        if (itemInInventory != null){
-            if (status == Status.ISFOOD){
-                if (life == 50){
+        if (itemInInventory != null) {
+            if (status == Status.ISFOOD) {
+                if (life == 50) {
                     inventory.remove(itemInInventory);
                     return "You just ate a " + itemInInventory.getItemName() + " but were already on max HP";
-                } else if (life < 50){
+                } else if (life < 50) {
                     Food food = (Food) itemInInventory;
                     life += food.getHealthOrDamage();
-                    if (life > 50){
+                    if (life > 50) {
                         life = 50;
                         return "You just ate: " + itemInInventory.getItemName() + " and is now on max HP";
                     }
@@ -144,20 +149,20 @@ public class Player {
                 return "You can't eat a " + itemInInventory.getItemName() + " you doughnut!";
             }
         } else if (itemOnTheGround != null) {
-            if (status == Status.ISFOOD){
+            if (status == Status.ISFOOD) {
                 Food food = (Food) itemOnTheGround;
-                if (food.getHealthOrDamage() < 0){
+                if (food.getHealthOrDamage() < 0) {
                     life += food.getHealthOrDamage();
                     String s = "You've eaten poison food and taken " + food.getHealthOrDamage() + " points of damage and is now on " + life + "HP";
                     currentRoom.removeItem(itemOnTheGround);
                     return s;
                 } else {
-                    if (life == 50){
+                    if (life == 50) {
                         currentRoom.removeItem(itemOnTheGround);
                         return "You just ate a " + itemOnTheGround.getItemName() + " but were already on max HP";
-                    } else if (life < 50){
+                    } else if (life < 50) {
                         life += food.getHealthOrDamage();
-                        if (life > 50){
+                        if (life > 50) {
                             life = 50;
                             return "You just ate: " + itemOnTheGround.getItemName() + " and is now on max HP";
                         }
@@ -169,5 +174,45 @@ public class Player {
             }
         }
         return "No such item exist in your inventory or in the room.";
+    }
+
+    public String equipOrUnequipItem(String action, String item) {
+        if (rightHand != null && !action.equalsIgnoreCase("unequip")){
+            return "You already have " + rightHand.getItemName() + " equipped. Unequip it to equip a new weapon";
+        }
+        Weapon weapon = (Weapon) findItemInInventory(item);
+        if (action.equalsIgnoreCase("equip")) {
+            if (weapon != null && weapon.isWeapon() && rightHand == null) {
+                rightHand = weapon;
+                inventory.remove(weapon);
+                return "You've equipped " + weapon.getItemName();
+            } else if (weapon != null && !weapon.isWeapon()) {
+                return weapon.getItemName() + " is not a weapon!";
+            } else {
+                return item + " is not in your inventory!";
+            }
+        } else if (action.equalsIgnoreCase("unequip")) {
+            if (rightHand == null) {
+                return "You don't have " + item + " equipped!";
+            } else {
+                inventory.add(rightHand);
+                rightHand = null;
+                return "You have unequipped " + item + " and put it into your inventory";
+            }
+        } else {
+            return null;
+        }
+    }
+
+    public String playerAttack(String enemy) {
+        if (rightHand != null) {
+            if (!enemy.equalsIgnoreCase("air")) {
+                return "You attacked the " + enemy + " for " + rightHand.getDamage() + " points of damage!";
+            } else {
+                return "You attacked the air you doughnut!";
+            }
+        } else {
+            return "You don't have a weapon equipped and can't attack!";
+        }
     }
 }

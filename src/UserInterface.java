@@ -34,23 +34,37 @@ public class UserInterface {
                         System.out.println(adventureCont.getItemsOnTheGround());
                     }
                 }
-                case "take" -> {
+                case "take", "drop" -> {
                     if (!parameter.isEmpty()) {
                         if (adventureCont.doesItemExist(action,parameter)) {
                             System.out.println(adventureCont.takeOrDropItem(action, parameter));
                         }
-                    } else {
+                    } else if (action.equalsIgnoreCase("take")){
                         System.out.println("Specify an item to take.");
+                    } else {
+                        System.out.println("Specify and item to drop.");
                     }
                 }
 
-                case "drop" -> {
-                    if (!parameter.isEmpty()) {
-                        if (adventureCont.doesItemExist(action, parameter)) {
-                            System.out.println(adventureCont.takeOrDropItem(action, parameter));
+                case "equip", "unequip" -> {
+                    if (!parameter.isEmpty()){
+                        if (adventureCont.doesItemExist(action, parameter)){
+                            System.out.println(adventureCont.equipOrUnequipItem(action, parameter));
+                        } else {
+                            System.out.println(parameter + " is not a weapon and can't be equipped.");
                         }
+                    } else if (action.equalsIgnoreCase("equip")){
+                        System.out.println("Specify an item to equip.");
                     } else {
-                        System.out.println("Specify an item to drop.");
+                        System.out.println("Specify an item to unequip.");
+                    }
+                }
+
+                case "attack" -> {
+                    if (!parameter.isEmpty()){
+                        System.out.println(adventureCont.playerAttack(parameter));
+                    } else {
+                        System.out.println(adventureCont.playerAttack("air"));
                     }
                 }
 
@@ -81,7 +95,10 @@ public class UserInterface {
                 "look - show description for current room\n" +
                 "Take <item> - take an item from the room\n" +
                 "drop <item> - drop an item in the room \n" +
-                "inventory, inv, invent - display player inventory" +
+                "inventory, inv, invent - display player inventory\n" +
+                "equip <weapon> - equip an weapon into your hand\n" +
+                "unequip <weapon> - unequip weapon back into your inventory\n" +
+                "attakc <enemy> - attacks your enemy with your weapon\n"+
                 "help - shows available commands\n" +
                 "exit - exits the program");
     }

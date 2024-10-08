@@ -2,29 +2,39 @@ import java.util.ArrayList;
 
 public class Room {
     private String roomName;
-    private String roomDescription;
+    private String longRoomDescription;
+    private String shortRoomDescription;
     private Room northRoom;
     private Room southRoom;
     private Room westRoom;
     private Room eastRoom;
     private ArrayList<Item> itemsOnTheGround;
 
-    public Room(String name, String description) {
+    public Room(String name, String longRoomDescription, String shortRoomDescription) {
         this.roomName = name;
-        this.roomDescription = description;
+        this.longRoomDescription = longRoomDescription;
+        this.shortRoomDescription = shortRoomDescription;
         this.itemsOnTheGround = new ArrayList<>();
     }
 
     public void setNorthRoom(Room northRoom) {
         this.northRoom = northRoom;
+        if(northRoom.southRoom != this)
+        {
+            northRoom.setSouthRoom(this);
+        }
     }
 
     public Room getNorthRoom() {
         return northRoom;
     }
 
-    public void setSoutRoom(Room soutRoom) {
-        this.southRoom = soutRoom;
+    public void setSouthRoom(Room southRoom) {
+        this.southRoom = southRoom;
+        if(southRoom.northRoom != this)
+        {
+            southRoom.setNorthRoom(this);
+        }
     }
 
     public Room getSouthRoom() {
@@ -33,6 +43,9 @@ public class Room {
 
     public void setWestRoom(Room westRoom) {
         this.westRoom = westRoom;
+        if (westRoom.eastRoom != this){
+            westRoom.setEastRoom(this);
+        }
     }
 
     public Room getWestRoom() {
@@ -41,14 +54,17 @@ public class Room {
 
     public void setEastRoom(Room eastRoom) {
         this.eastRoom = eastRoom;
+        if (eastRoom.westRoom != this){
+            eastRoom.setWestRoom(this);
+        }
     }
 
     public Room getEastRoom() {
         return eastRoom;
     }
 
-    public String getRoomDescription() {
-        return roomDescription;
+    public String getLongRoomDescription() {
+        return longRoomDescription;
     }
 
     public String getRoomName() {
@@ -65,7 +81,7 @@ public class Room {
 
     public String getItemsOnTheGround() {
         if (itemsOnTheGround != null){
-            String onTheGround = "On the ground you find:";
+            String onTheGround = "\nOn the ground you find:";
             for (Item item : itemsOnTheGround){
                 onTheGround += "\n" + item.getItemDescription();
             }

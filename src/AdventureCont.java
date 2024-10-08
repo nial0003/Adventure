@@ -32,6 +32,14 @@ public class AdventureCont {
     public String eat(Status statud, String foodItem){
         return player.eat(statud,foodItem);
     }
+
+    public String equipOrUnequipItem(String action, String item){
+        return player.equipOrUnequipItem(action, item);
+    }
+
+    public String playerAttack(String enemy){
+        return player.playerAttack(enemy);
+    }
 }
 
 
