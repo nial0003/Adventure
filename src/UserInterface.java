@@ -7,7 +7,6 @@ public class UserInterface {
     public UserInterface() {
         sc = new Scanner(System.in);
         adventureCont = new AdventureCont();
-        roomNavigation();
     }
 
     public void roomNavigation() {
@@ -29,7 +28,7 @@ public class UserInterface {
 
                 case "inventory", "inv", "invent" -> System.out.println(adventureCont.showInventory());
                 case "look" -> {
-                    System.out.println(adventureCont.getCurrentRoomDescription());
+                    System.out.println(adventureCont.getCurrentRoomLongDescription());
                     if (adventureCont.getItemsOnTheGround() != null) {
                         System.out.println(adventureCont.getItemsOnTheGround());
                     }
@@ -92,7 +91,7 @@ public class UserInterface {
         }
     }
 
-    public void displayHelp() {
+    private void displayHelp() {
         System.out.println("Available commands:\n" +
                 "north, n, go north - move north\n" +
                 "west, w, go west - move west\n" +
@@ -109,7 +108,7 @@ public class UserInterface {
                 "exit - exits the program");
     }
 
-    public void gameDescription() {
+    private void gameDescription() {
         System.out.println("""
                 Welcome to the game.
                 You're an adventurer called Brutus! You've heard of a magical forest
@@ -120,7 +119,7 @@ public class UserInterface {
                 You're sure you're on the right track!""");
     }
 
-    public String eat(String parameter) {
+    private String eat(String parameter) {
         return switch (adventureCont.isItFood(parameter)) {
             case Status.ISFOOD -> adventureCont.eat(Status.ISFOOD, parameter);
             case Status.ISNOTFOOD -> adventureCont.eat(Status.ISNOTFOOD, parameter);

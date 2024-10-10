@@ -1,8 +1,8 @@
 public abstract class Weapon extends Item {
     private int damage;
-    boolean isRanged;
+    private boolean isRanged;
 
-    public Weapon(String nameOfWeapon, String descriptionOfWeapon, int damage, Boolean isRanged) {
+    public Weapon(String nameOfWeapon, String descriptionOfWeapon, int damage, boolean isRanged) {
         super(nameOfWeapon, descriptionOfWeapon, true);
         this.damage = damage;
         this.isRanged = isRanged;

@@ -20,7 +20,7 @@ public class Player {
         return currentRoom.getItemsOnTheGround();
     }
 
-    public String getCurrentRoomDescription() {
+    public String getCurrentRoomLongDescription() {
         return currentRoom.getLongRoomDescription();
     }
 
@@ -55,7 +55,7 @@ public class Player {
         return move(direction, nextRoom);
     }
 
-    public Boolean doesItemExist(String action, String itemName) {
+    public boolean doesItemExist(String action, String itemName) {
         if (action.equalsIgnoreCase("take")) {
             Item item = currentRoom.findItem(itemName);
             return item != null;
@@ -106,7 +106,7 @@ public class Player {
             for (Item item : inventory) {
                 s += "\n" + item.getItemDescription();
                 if (item instanceof Weapon weapon) {
-                    if (weapon.isRanged) {
+                    if (weapon.isRanged()) {
                         s += ", you have " + weapon.getAmmo() + " ammo left for it";
                     }
                 }
@@ -251,9 +251,6 @@ public class Player {
                         " points of damage and have " + rightHand.getAmmo() + " ammo left";
                 return isEnemyDead(enemy, s);
             }
-        } else if (playerShootEnemy() && enemy != null) {
-            return "You don't have anymore ammo left for your weapon!";
-
         }
 
         if (rightHand != null) {
@@ -272,7 +269,7 @@ public class Player {
                 if (playerShootEnemy()) {
                     rightHand.setAmmo(rightHand.getAmmo() - 1);
                     return "You shot the air and have " + rightHand.getAmmo() + " ammo left you doughnut!";
-                } else if (!playerShootEnemy() && rightHand.isRanged) {
+                } else if (!playerShootEnemy() && rightHand.isRanged()) {
                     return "You don't have anymore ammo left for your weapon!";
                 }
                 return "You attacked the air you doughnut!";
@@ -292,22 +289,10 @@ public class Player {
         return s;
     }
 
-    private Boolean playerShootEnemy() {
+    private boolean playerShootEnemy() {
         if (rightHand != null && rightHand.canUse()) {
             return rightHand.canUse();
         }
         return false;
-    }
-
-    public int getDamage() {
-        return rightHand.getDamage();
-    }
-
-    public String getWeaponName() {
-        return rightHand.getItemName();
-    }
-
-    public int getAmmo() {
-        return rightHand.getAmmo();
     }
 }

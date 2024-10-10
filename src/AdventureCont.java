@@ -1,5 +1,5 @@
 public class AdventureCont {
-    Player player = new Player("The Player");
+    private Player player = new Player("The Player");
 
     public String moveToAdjacentRoom(String direction){
         return player.moveToAdjacentRoom(direction);
@@ -9,8 +9,8 @@ public class AdventureCont {
         return player.showInventory();
     }
 
-    public String getCurrentRoomDescription(){
-        return player.getCurrentRoomDescription();
+    public String getCurrentRoomLongDescription(){
+        return player.getCurrentRoomLongDescription();
     }
 
     public String getItemsOnTheGround(){
@@ -21,7 +21,7 @@ public class AdventureCont {
         return player.takeOrDropItem(action, parameter);
     }
 
-    public Boolean doesItemExist(String action, String itemName){
+    public boolean doesItemExist(String action, String itemName){
         return player.doesItemExist(action, itemName);
     }
 
@@ -29,8 +29,8 @@ public class AdventureCont {
         return player.isItFood(foodItem);
     }
 
-    public String eat(Status statud, String foodItem){
-        return player.eat(statud,foodItem);
+    public String eat(Status status, String foodItem){
+        return player.eat(status,foodItem);
     }
 
     public String equipOrUnequipItem(String action, String item){
@@ -39,18 +39,6 @@ public class AdventureCont {
 
     public String playerHitEnemy(String enemy){
         return player.playerHitEnemy(enemy);
-    }
-
-    public int getDamage(){
-        return player.getDamage();
-    }
-
-    public String getWeaponName(){
-        return player.getWeaponName();
-    }
-
-    public int getAmmo(){
-        return player.getAmmo();
     }
 }
 

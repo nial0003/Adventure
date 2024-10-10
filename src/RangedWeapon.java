@@ -7,7 +7,7 @@ public class RangedWeapon extends Weapon {
         this.ammo = ammo;
     }
 
-    @Override
+
     public void setAmmo(int ammo) {
         this.ammo = ammo;
     }
@@ -17,7 +17,6 @@ public class RangedWeapon extends Weapon {
         return ammo > 0;
     }
 
-    @Override
     public int getAmmo() {
         return ammo;
     }

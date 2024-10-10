@@ -10,6 +10,7 @@ public class Map {
                         is a picnic cloth and a basket. Inside the basket is a single apple and a shiny brass oil lamp sits next to the basket.\s
                         You see 2 possible ways to go.""",
                 "You're in a clearing with an open canopy above you.\nThere are 2 open ways to go.");
+        room1.setHasBeenVisited(true);
         Room room2 = new Room("The Forest River",
                 """
                         You've fumbled your way through brambles and thorns until you arrive at a small river.
@@ -95,7 +96,7 @@ public class Map {
 
         room1.addItem(new Item("Lamp", "A shiny brass lamp.", false));
         room1.addItem(new Food("Apple", "A juicy red apple.", -10));
-        room1.addItem(new RangedWeapon("Bow", "A wooden Bow and quiver with arrows", 5, 5));
+        room1.addItem(new RangedWeapon("Bow", "A wooden Bow and quiver with arrows", 5, 0));
         room1.addItem(new MeleeWeapon("Sword", "A sharp sword.", 5));
 
         room2.addEnemy(new Enemy("Goblin", 10, new MeleeWeapon("Dagger", "A Goblin Dagger", 2)));
