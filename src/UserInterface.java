@@ -36,36 +36,42 @@ public class UserInterface {
                 }
                 case "take", "drop" -> {
                     if (!parameter.isEmpty()) {
-                        if (adventureCont.doesItemExist(action,parameter)) {
+                        if (adventureCont.doesItemExist(action, parameter)) {
                             System.out.println(adventureCont.takeOrDropItem(action, parameter));
                         }
-                    } else if (action.equalsIgnoreCase("take")){
+                    } else if (action.equalsIgnoreCase("take")) {
                         System.out.println("Specify an item to take.");
                     } else {
                         System.out.println("Specify and item to drop.");
                     }
                 }
 
-                case "equip", "unequip" -> {
-                    if (!parameter.isEmpty()){
-                        if (adventureCont.doesItemExist(action, parameter)){
+                case "equip" -> {
+                    if (!parameter.isEmpty()) {
+                        if (adventureCont.doesItemExist(action, parameter)) {
                             System.out.println(adventureCont.equipOrUnequipItem(action, parameter));
                         } else {
-                            System.out.println(parameter + " is not a weapon and can't be equipped.");
+                            System.out.println(parameter + " is not in your inventory or is not a weapon!");
                         }
-                    } else if (action.equalsIgnoreCase("equip")){
+                    } else {
                         System.out.println("Specify an item to equip.");
+                    }
+                }
+
+                case "unequip" -> {
+                    if (!parameter.isEmpty()){
+                        if (adventureCont.doesItemExist(action, parameter)){
+                            System.out.println(adventureCont.equipOrUnequipItem(action,parameter));
+                        } else {
+                            System.out.println("You don't have a weapon equipped");
+                        }
                     } else {
                         System.out.println("Specify an item to unequip.");
                     }
                 }
 
-                case "attack" -> {
-                    if (!parameter.isEmpty()){
-                        System.out.println(adventureCont.playerAttack(parameter));
-                    } else {
-                        System.out.println(adventureCont.playerAttack("air"));
-                    }
+                case "attack", "shoot" -> {
+                    System.out.println(adventureCont.playerHitEnemy(parameter));
                 }
 
                 case "eat" -> System.out.println(eat(parameter));
@@ -98,23 +104,24 @@ public class UserInterface {
                 "inventory, inv, invent - display player inventory\n" +
                 "equip <weapon> - equip an weapon into your hand\n" +
                 "unequip <weapon> - unequip weapon back into your inventory\n" +
-                "attakc <enemy> - attacks your enemy with your weapon\n"+
+                "attack, shoot <enemy> - attacks your enemy with your weapon\n" +
                 "help - shows available commands\n" +
                 "exit - exits the program");
     }
 
     public void gameDescription() {
-        System.out.println("Welcome to the game." +
-                "\nYou're an adventurer called Brutus! You've heard of a magical forest" +
-                "\nin which, in the middle, exists a magical elf society filled with magical artifacts and treasures." +
-                "\nYou've walked for what feels like hours through thick brush and brambles until you finally reach" +
-                "\na clearing. But it feels as though the magic forest has closed off the way from which you came as" +
-                "\nthick trees, that you can't push through, have suddenly sprouted all around you except for 2 ways." +
-                "\nYou're sure you're on the right track!");
+        System.out.println("""
+                Welcome to the game.
+                You're an adventurer called Brutus! You've heard of a magical forest
+                in which, in the middle, exists a magical elf society filled with magical artifacts and treasures.
+                You've walked for what feels like hours through thick brush and brambles until you finally reach
+                a clearing. But it feels as though the magic forest has closed off the way from which you came as
+                thick trees, that you can't push through, have suddenly sprouted all around you except for 2 ways.
+                You're sure you're on the right track!""");
     }
 
-    public String eat(String parameter){
-        return switch (adventureCont.isItFood(parameter)){
+    public String eat(String parameter) {
+        return switch (adventureCont.isItFood(parameter)) {
             case Status.ISFOOD -> adventureCont.eat(Status.ISFOOD, parameter);
             case Status.ISNOTFOOD -> adventureCont.eat(Status.ISNOTFOOD, parameter);
             default -> adventureCont.eat(Status.ISNOTFOUND, parameter);

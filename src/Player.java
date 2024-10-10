@@ -4,18 +4,16 @@ public class Player {
     private Map map;
     private Room currentRoom;
     private ArrayList<Item> inventory;
-    private int life;
+    private int healthPoint;
     private Weapon rightHand;
+    private String name;
 
-    public Player() {
+    public Player(String name) {
         this.map = new Map();
         currentRoom = map.createMap();
         this.inventory = new ArrayList<>();
-        this.life = 25;
-    }
-
-    public Room getCurrentRoom() {
-        return currentRoom;
+        this.healthPoint = 25;
+        this.name = name;
     }
 
     public String getItemsOnTheGround() {
@@ -26,12 +24,29 @@ public class Player {
         return currentRoom.getLongRoomDescription();
     }
 
+    public String getName() {
+        return name;
+    }
+
     private String move(String direction, Room nextRoom) {
+        String s = "";
         if (nextRoom == null) {
             return "The way " + direction + " is blocked!";
+        } else if (!nextRoom.getHasBeenVisited()) {
+            currentRoom = nextRoom;
+            currentRoom.setHasBeenVisited(true);
+            s = "You went " + direction + "! \n\n" + currentRoom.getRoomName() + "\n" + currentRoom.getLongRoomDescription();
+            if (!currentRoom.getEnemiesInTheRoom().isEmpty()) {
+                s += currentRoom.printEnemiesInTheRoom();
+            }
+            return s;
         } else {
             currentRoom = nextRoom;
-            return "You went " + direction + "! \n" + currentRoom.getLongRoomDescription();
+            s = "You went " + direction + "! \n" + currentRoom.getRoomName() + "\n" + currentRoom.getShortRoomDescription();
+            if (!currentRoom.getEnemiesInTheRoom().isEmpty()) {
+                s += currentRoom.printEnemiesInTheRoom();
+            }
+            return s;
         }
     }
 
@@ -81,15 +96,26 @@ public class Player {
             String s = "There are no items in your inventory.";
             if (rightHand != null) {
                 s += "\n\nYou currently have: " + rightHand.getItemName() + " equipped.";
+                if (rightHand.isRanged()) {
+                    s += "\n you have " + rightHand.getAmmo() + " ammo left for your " + rightHand.getItemName();
+                }
             }
             return s;
         } else {
             String s = "These items are in your inventory:";
             for (Item item : inventory) {
                 s += "\n" + item.getItemDescription();
+                if (item instanceof Weapon weapon) {
+                    if (weapon.isRanged) {
+                        s += ", you have " + weapon.getAmmo() + " ammo left for it";
+                    }
+                }
             }
             if (rightHand != null) {
                 s += "\n\nYou currently have: " + rightHand.getItemName() + " equipped.";
+                if (rightHand.isRanged()) {
+                    s += "\nyou have " + rightHand.getAmmo() + " ammo left for your " + rightHand.getItemName();
+                }
             }
             return s;
         }
@@ -104,8 +130,12 @@ public class Player {
         return null;
     }
 
-    public int getLife() {
-        return life;
+    public int getHealthPoint() {
+        return healthPoint;
+    }
+
+    public void setHealthPoint(int healthPoint) {
+        this.healthPoint = healthPoint;
     }
 
     public Enum isItFood(String foodItem) {
@@ -133,17 +163,17 @@ public class Player {
         Item itemOnTheGround = currentRoom.findItem(foodItem);
         if (itemInInventory != null) {
             if (status == Status.ISFOOD) {
-                if (life == 50) {
+                if (healthPoint == 50) {
                     inventory.remove(itemInInventory);
                     return "You just ate a " + itemInInventory.getItemName() + " but were already on max HP";
-                } else if (life < 50) {
+                } else if (healthPoint < 50) {
                     Food food = (Food) itemInInventory;
-                    life += food.getHealthOrDamage();
-                    if (life > 50) {
-                        life = 50;
+                    healthPoint += food.getHealthOrDamage();
+                    if (healthPoint > 50) {
+                        healthPoint = 50;
                         return "You just ate: " + itemInInventory.getItemName() + " and is now on max HP";
                     }
-                    return "You ate: " + itemInInventory.getItemName() + " and changed your life with: " + food.getHealthOrDamage() + " and is now on: " + life + "HP";
+                    return "You ate: " + itemInInventory.getItemName() + " and changed your life with: " + food.getHealthOrDamage() + " and is now on: " + healthPoint + "HP";
                 }
             } else {
                 return "You can't eat a " + itemInInventory.getItemName() + " you doughnut!";
@@ -152,21 +182,21 @@ public class Player {
             if (status == Status.ISFOOD) {
                 Food food = (Food) itemOnTheGround;
                 if (food.getHealthOrDamage() < 0) {
-                    life += food.getHealthOrDamage();
-                    String s = "You've eaten poison food and taken " + food.getHealthOrDamage() + " points of damage and is now on " + life + "HP";
+                    healthPoint += food.getHealthOrDamage();
+                    String s = "You've eaten poison food and taken " + food.getHealthOrDamage() + " points of damage and is now on " + healthPoint + "HP";
                     currentRoom.removeItem(itemOnTheGround);
                     return s;
                 } else {
-                    if (life == 50) {
+                    if (healthPoint == 50) {
                         currentRoom.removeItem(itemOnTheGround);
                         return "You just ate a " + itemOnTheGround.getItemName() + " but were already on max HP";
-                    } else if (life < 50) {
-                        life += food.getHealthOrDamage();
-                        if (life > 50) {
-                            life = 50;
+                    } else if (healthPoint < 50) {
+                        healthPoint += food.getHealthOrDamage();
+                        if (healthPoint > 50) {
+                            healthPoint = 50;
                             return "You just ate: " + itemOnTheGround.getItemName() + " and is now on max HP";
                         }
-                        return "You ate: " + itemOnTheGround.getItemName() + " and changed your life with: " + food.getHealthOrDamage() + " and is now on: " + life + "HP";
+                        return "You ate: " + itemOnTheGround.getItemName() + " and changed your life with: " + food.getHealthOrDamage() + " and is now on: " + healthPoint + "HP";
                     }
                 }
             } else {
@@ -177,42 +207,107 @@ public class Player {
     }
 
     public String equipOrUnequipItem(String action, String item) {
-        if (rightHand != null && !action.equalsIgnoreCase("unequip")){
+        if (rightHand != null && action.equalsIgnoreCase("equip")) {
             return "You already have " + rightHand.getItemName() + " equipped. Unequip it to equip a new weapon";
         }
         Weapon weapon = (Weapon) findItemInInventory(item);
-        if (action.equalsIgnoreCase("equip")) {
-            if (weapon != null && weapon.isWeapon() && rightHand == null) {
+        if (action.equalsIgnoreCase("equip") && weapon != null && weapon.isWeapon() && rightHand == null) {
                 rightHand = weapon;
                 inventory.remove(weapon);
                 return "You've equipped " + weapon.getItemName();
-            } else if (weapon != null && !weapon.isWeapon()) {
-                return weapon.getItemName() + " is not a weapon!";
-            } else {
-                return item + " is not in your inventory!";
-            }
         } else if (action.equalsIgnoreCase("unequip")) {
-            if (rightHand == null) {
-                return "You don't have " + item + " equipped!";
-            } else {
+            if (item.equalsIgnoreCase(rightHand.getItemName())) {
                 inventory.add(rightHand);
+                String s = "You have unequipped " + rightHand.getItemName() + " and put it into your inventory";
                 rightHand = null;
-                return "You have unequipped " + item + " and put it into your inventory";
+                return s;
+            } else {
+                return "You don't have " + item + " equipped";
             }
         } else {
             return null;
         }
     }
 
-    public String playerAttack(String enemy) {
-        if (rightHand != null) {
-            if (!enemy.equalsIgnoreCase("air")) {
-                return "You attacked the " + enemy + " for " + rightHand.getDamage() + " points of damage!";
+    public String playerHitEnemy(String enemyName) {
+        //Finder enemy hvis player har givet korrekt navn. Hvis ikke de har givet korrekt navn men enemy eksitere i rummet
+        //sætter vi enemy til den første enemy i vores arrayliste.
+        Enemy enemy = currentRoom.findEnemy(enemyName);
+        if (enemy == null && !currentRoom.getEnemiesInTheRoom().isEmpty()) {
+            enemy = currentRoom.getEnemiesInTheRoom().getFirst();
+        }
+
+        if (playerShootEnemy() && enemy != null) {
+            String s = "";
+            if (enemy.getName().equalsIgnoreCase(enemyName)) {
+                enemy.setHealthPoint(enemy.getHealthPoint() - rightHand.getDamage());
+                rightHand.setAmmo(rightHand.getAmmo() - 1);
+                s = "You shot the " + enemyName + " for " + rightHand.getDamage() + " points of damage and have " + rightHand.getAmmo() + " ammo left";
+                return isEnemyDead(enemy, s);
             } else {
+                enemy.setHealthPoint(enemy.getHealthPoint() - rightHand.getDamage());
+                rightHand.setAmmo(rightHand.getAmmo() - 1);
+                s = "You shot the closest enemy to you, " + enemy.getName() + ",  for " + rightHand.getDamage() +
+                        " points of damage and have " + rightHand.getAmmo() + " ammo left";
+                return isEnemyDead(enemy, s);
+            }
+        } else if (playerShootEnemy() && enemy != null) {
+            return "You don't have anymore ammo left for your weapon!";
+
+        }
+
+        if (rightHand != null) {
+            if (enemy != null) {
+                String s = "";
+                if (enemy.getName().equalsIgnoreCase(enemyName)) {
+                    enemy.setHealthPoint(enemy.getHealthPoint() - rightHand.getDamage());
+                    s = "You hit the " + enemy.getName() + " for " + rightHand.getDamage() + " points of damage!";
+                    return isEnemyDead(enemy, s);
+                } else {
+                    enemy.setHealthPoint(enemy.getHealthPoint() - rightHand.getDamage());
+                    s = "You hit the closest enemy to you, " + enemy.getName() + ",  for " + rightHand.getDamage() + " points of damage!";
+                    return isEnemyDead(enemy, s);
+                }
+            } else {
+                if (playerShootEnemy()) {
+                    rightHand.setAmmo(rightHand.getAmmo() - 1);
+                    return "You shot the air and have " + rightHand.getAmmo() + " ammo left you doughnut!";
+                } else if (!playerShootEnemy() && rightHand.isRanged) {
+                    return "You don't have anymore ammo left for your weapon!";
+                }
                 return "You attacked the air you doughnut!";
             }
-        } else {
-            return "You don't have a weapon equipped and can't attack!";
         }
+        return "You don't have a weapon equipped and can't attack";
+    }
+
+    private String isEnemyDead(Enemy enemy, String s) {
+        if (enemy.isDead()) {
+            s += "\n" + enemy.getName() + " has died and dropped " + enemy.getWeaponName();
+            currentRoom.addItem(enemy.getWeapon());
+            currentRoom.removeEnemy(enemy);
+            return s;
+        }
+        s += "\n" + enemy.attackPlayer(this);
+        return s;
+    }
+
+    private Boolean playerShootEnemy() {
+        if (rightHand != null && rightHand.canUse()) {
+            return rightHand.canUse();
+        }
+        return false;
+    }
+
+    public int getDamage() {
+        return rightHand.getDamage();
+    }
+
+    public String getWeaponName() {
+        return rightHand.getItemName();
+    }
+
+    public int getAmmo() {
+        return rightHand.getAmmo();
     }
 }

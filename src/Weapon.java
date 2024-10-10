@@ -1,4 +1,4 @@
-public class Weapon extends Item {
+public abstract class Weapon extends Item {
     private int damage;
     boolean isRanged;
 
@@ -8,12 +8,16 @@ public class Weapon extends Item {
         this.isRanged = isRanged;
     }
 
-    @Override
-    public String getItemName() {
-        return super.getItemName();
-    }
-
     public int getDamage() {
         return damage;
     }
+
+    public boolean isRanged(){
+        return isRanged;
+    }
+
+    public abstract boolean canUse();
+
+    public abstract int getAmmo();
+    public abstract void setAmmo(int ammo);
 }

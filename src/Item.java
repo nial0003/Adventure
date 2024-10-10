@@ -20,4 +20,5 @@ public class Item {
     public boolean isWeapon(){
         return isWeapon;
     }
+
 }

@@ -1,5 +1,5 @@
 public class AdventureCont {
-    Player player = new Player();
+    Player player = new Player("The Player");
 
     public String moveToAdjacentRoom(String direction){
         return player.moveToAdjacentRoom(direction);
@@ -37,8 +37,20 @@ public class AdventureCont {
         return player.equipOrUnequipItem(action, item);
     }
 
-    public String playerAttack(String enemy){
-        return player.playerAttack(enemy);
+    public String playerHitEnemy(String enemy){
+        return player.playerHitEnemy(enemy);
+    }
+
+    public int getDamage(){
+        return player.getDamage();
+    }
+
+    public String getWeaponName(){
+        return player.getWeaponName();
+    }
+
+    public int getAmmo(){
+        return player.getAmmo();
     }
 }
 

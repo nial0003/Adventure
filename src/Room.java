@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Room {
     private String roomName;
@@ -9,12 +10,15 @@ public class Room {
     private Room westRoom;
     private Room eastRoom;
     private ArrayList<Item> itemsOnTheGround;
+    private ArrayList<Enemy> enemiesInTheRoom;
+    private boolean hasBeenVisited = false;
 
     public Room(String name, String longRoomDescription, String shortRoomDescription) {
         this.roomName = name;
         this.longRoomDescription = longRoomDescription;
         this.shortRoomDescription = shortRoomDescription;
         this.itemsOnTheGround = new ArrayList<>();
+        this.enemiesInTheRoom = new ArrayList<>();
     }
 
     public void setNorthRoom(Room northRoom) {
@@ -25,20 +29,12 @@ public class Room {
         }
     }
 
-    public Room getNorthRoom() {
-        return northRoom;
-    }
-
     public void setSouthRoom(Room southRoom) {
         this.southRoom = southRoom;
         if(southRoom.northRoom != this)
         {
             southRoom.setNorthRoom(this);
         }
-    }
-
-    public Room getSouthRoom() {
-        return southRoom;
     }
 
     public void setWestRoom(Room westRoom) {
@@ -48,19 +44,11 @@ public class Room {
         }
     }
 
-    public Room getWestRoom() {
-        return westRoom;
-    }
-
     public void setEastRoom(Room eastRoom) {
         this.eastRoom = eastRoom;
         if (eastRoom.westRoom != this){
             eastRoom.setWestRoom(this);
         }
-    }
-
-    public Room getEastRoom() {
-        return eastRoom;
     }
 
     public String getLongRoomDescription() {
@@ -73,6 +61,14 @@ public class Room {
 
     public void addItem(Item item) {
         itemsOnTheGround.add(item);
+    }
+
+    public void addEnemy(Enemy enemy){
+        enemiesInTheRoom.add(enemy);
+    }
+
+    public void removeEnemy(Enemy enemy){
+        enemiesInTheRoom.remove(enemy);
     }
 
     public void removeItem(Item item) {
@@ -118,5 +114,42 @@ public class Room {
         } else {
             return false;
         }
+    }
+
+    public ArrayList<Enemy> getEnemiesInTheRoom() {
+        return enemiesInTheRoom;
+    }
+
+    public Enemy findEnemy(String enemyName){
+        for (Enemy enemy : enemiesInTheRoom){
+            if (enemy.getName().equalsIgnoreCase(enemyName))
+            {
+                return enemy;
+            }
+        }
+        return null;
+    }
+
+    public void setHasBeenVisited(boolean hasBeenVisited) {
+        this.hasBeenVisited = hasBeenVisited;
+    }
+
+    public boolean getHasBeenVisited(){
+        return hasBeenVisited;
+    }
+
+    public String getShortRoomDescription() {
+        return shortRoomDescription;
+    }
+
+    public String printEnemiesInTheRoom(){
+        if (enemiesInTheRoom != null) {
+            String enemyInTheRoom = "\nEnemies in the room: ";
+            for (Enemy enemy : enemiesInTheRoom) {
+                enemyInTheRoom += "\nA " + enemy.getName();
+            }
+            return enemyInTheRoom;
+        }
+        return null;
     }
 }
