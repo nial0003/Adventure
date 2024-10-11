@@ -145,7 +145,11 @@ public class Room {
         if (enemiesInTheRoom != null) {
             String enemyInTheRoom = "\nEnemies in the room: ";
             for (Enemy enemy : enemiesInTheRoom) {
-                enemyInTheRoom += "\nA " + enemy.getName();
+                if (enemy.isBoss()){
+                    enemyInTheRoom +="\n" + enemy.getDescription();
+                }else {
+                    enemyInTheRoom += "\nA " + enemy.getName();
+                }
             }
             return enemyInTheRoom;
         }

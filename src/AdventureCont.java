@@ -40,6 +40,10 @@ public class AdventureCont {
     public String playerHitEnemy(String enemy){
         return player.playerHitEnemy(enemy);
     }
+
+    public boolean playerIsDead(){
+        return player.playerIsDead();
+    }
 }
 
 

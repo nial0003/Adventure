@@ -37,9 +37,9 @@ public class Map {
                 elven song as it grows louder and louder. At this point you're enslaved to the elven song, even if you wanted to turn away you're not convinced you could.
                 As you get closer you start to see the bottom of the pearly white spires that are towering into the canopy above. But even as the canopy is completely closed
                 there's still light as if the city itself is glowing. You finally breach the woods but what you see is not what you expected. The singing stops,
-                and before you stand a tall ugly smelly troll. "I am the mighty troll Skarix! I've been tasked with protecting this ugly city by the elves, but
+                and before you stand a tall ugly smelly troll. "I am the mighty troll Thorax! I've been tasked with protecting this ugly city by the elves, but
                 as a reward i'm allowed to eat any stupid adventurer who's trying to reach the elven king and queen. PREPARE TO GET EATEN!" he attacks you.""",
-                "You can see the eleven city but the smelly troll Skarix is blocking your way, you must defeat him to continue, or flee back from where you came!");
+                "You can see the eleven city but the smelly troll Thorax is blocking your way, you must defeat him to continue, or flee back from where you came!");
         Room room6 = new Room("The Sphinx's Challenge", """
                 As you step into this eerie chamber, the air feels heavy with an ancient, mystical presence.
                 In the center of the room stands an imposing stone Sphinx, its eyes glowing faintly in the dim light. The creature's massive wings are folded
@@ -95,8 +95,9 @@ public class Map {
         room8.setEastRoom(room9);
 
         room1.addItem(new Item("Lamp", "A shiny brass lamp.", false));
-        room1.addItem(new Food("Apple", "A juicy red apple.", -10));
-        room1.addItem(new RangedWeapon("Bow", "A wooden Bow and quiver with arrows", 5, 0));
+        room1.addItem(new Food("Apple", "A shiny red apple", 10));
+        room1.addItem(new Food("Cake", "A piece of Cake", -10, "A poisonous cake!"));
+        room1.addItem(new RangedWeapon("Bow", "A wooden Bow and quiver with arrows", 10, 3));
         room1.addItem(new MeleeWeapon("Sword", "A sharp sword.", 5));
 
         room2.addEnemy(new Enemy("Goblin", 10, new MeleeWeapon("Dagger", "A Goblin Dagger", 2)));
@@ -106,6 +107,9 @@ public class Map {
 
         room4.addItem(new MeleeWeapon("Axe", "A woodcutting axe.", 4));
         room4.addItem(new Food("Apple", "Ordinary looking green apple.", -8));
+
+        room5.addEnemy(new Enemy("Thorax", 50, new MeleeWeapon("Mace",
+                "A huge iron Mace", 15), "Big Boss Thorax!"));
 
         room9.addItem(new Item("Shield", "A wooden shield.", false));
 

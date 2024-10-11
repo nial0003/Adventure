@@ -163,17 +163,22 @@ public class Player {
         Item itemOnTheGround = currentRoom.findItem(foodItem);
         if (itemInInventory != null) {
             if (status == Status.ISFOOD) {
-                if (healthPoint == 50) {
+                Food food = (Food) itemInInventory;
+                if (food.getHealthOrDamage() < 0) {
+                    healthPoint += food.getHealthOrDamage();
+                    String s = "You've eaten " + food.getSecretDescription() + " and taken " + food.getHealthOrDamage() + " points of damage and is now on " + healthPoint + "HP";
+                    inventory.remove(itemInInventory);
+                    return s;
+                } else if (healthPoint == 50) {
                     inventory.remove(itemInInventory);
                     return "You just ate a " + itemInInventory.getItemName() + " but were already on max HP";
                 } else if (healthPoint < 50) {
-                    Food food = (Food) itemInInventory;
                     healthPoint += food.getHealthOrDamage();
                     if (healthPoint > 50) {
                         healthPoint = 50;
                         return "You just ate: " + itemInInventory.getItemName() + " and is now on max HP";
                     }
-                    return "You ate: " + itemInInventory.getItemName() + " and changed your life with: " + food.getHealthOrDamage() + " and is now on: " + healthPoint + "HP";
+                    return "You ate: " + itemInInventory.getItemName() + " and gained " + food.getHealthOrDamage() + " life and is now on: " + healthPoint + "HP";
                 }
             } else {
                 return "You can't eat a " + itemInInventory.getItemName() + " you doughnut!";
@@ -183,21 +188,19 @@ public class Player {
                 Food food = (Food) itemOnTheGround;
                 if (food.getHealthOrDamage() < 0) {
                     healthPoint += food.getHealthOrDamage();
-                    String s = "You've eaten poison food and taken " + food.getHealthOrDamage() + " points of damage and is now on " + healthPoint + "HP";
+                    String s = "You've eaten " + food.getSecretDescription() + " and taken " + food.getHealthOrDamage() + " points of damage and is now on " + healthPoint + "HP";
                     currentRoom.removeItem(itemOnTheGround);
                     return s;
-                } else {
-                    if (healthPoint == 50) {
-                        currentRoom.removeItem(itemOnTheGround);
-                        return "You just ate a " + itemOnTheGround.getItemName() + " but were already on max HP";
-                    } else if (healthPoint < 50) {
-                        healthPoint += food.getHealthOrDamage();
-                        if (healthPoint > 50) {
-                            healthPoint = 50;
-                            return "You just ate: " + itemOnTheGround.getItemName() + " and is now on max HP";
-                        }
-                        return "You ate: " + itemOnTheGround.getItemName() + " and changed your life with: " + food.getHealthOrDamage() + " and is now on: " + healthPoint + "HP";
+                } else if (healthPoint == 50) {
+                    currentRoom.removeItem(itemOnTheGround);
+                    return "You just ate a " + itemOnTheGround.getItemName() + " but were already on max HP";
+                } else if (healthPoint < 50) {
+                    healthPoint += food.getHealthOrDamage();
+                    if (healthPoint > 50) {
+                        healthPoint = 50;
+                        return "You just ate: " + itemOnTheGround.getItemDescription() + " and is now on max HP";
                     }
+                    return "You ate: " + itemOnTheGround.getItemName() + " and gained " + food.getHealthOrDamage() + " life and is now on: " + healthPoint + "HP";
                 }
             } else {
                 return "You can't eat a " + itemOnTheGround.getItemName() + " you doughnut!";
@@ -212,9 +215,9 @@ public class Player {
         }
         Weapon weapon = (Weapon) findItemInInventory(item);
         if (action.equalsIgnoreCase("equip") && weapon != null && weapon.isWeapon() && rightHand == null) {
-                rightHand = weapon;
-                inventory.remove(weapon);
-                return "You've equipped " + weapon.getItemName();
+            rightHand = weapon;
+            inventory.remove(weapon);
+            return "You've equipped " + weapon.getItemName();
         } else if (action.equalsIgnoreCase("unequip")) {
             if (item.equalsIgnoreCase(rightHand.getItemName())) {
                 inventory.add(rightHand);
@@ -294,5 +297,9 @@ public class Player {
             return rightHand.canUse();
         }
         return false;
+    }
+
+    public boolean playerIsDead() {
+        return healthPoint <= 0;
     }
 }

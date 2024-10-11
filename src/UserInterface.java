@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.Scanner;
 
 public class UserInterface {
@@ -71,6 +72,16 @@ public class UserInterface {
 
                 case "attack", "shoot" -> {
                     System.out.println(adventureCont.playerHitEnemy(parameter));
+                    if (adventureCont.playerIsDead()){
+                        try {
+                            String vlcPath = "\"C:\\Program Files\\VideoLAN\\VLC\\vlc.exe\"";
+                            String videoPath = "C:\\Users\\nikolaj\\IdeaProjects\\Adventure\\video\\lose.mp4";
+                            Runtime.getRuntime().exec(new String[]{vlcPath, videoPath});
+                        }catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        running = false;
+                    }
                 }
 
                 case "eat" -> System.out.println(eat(parameter));
@@ -126,4 +137,5 @@ public class UserInterface {
             default -> adventureCont.eat(Status.ISNOTFOUND, parameter);
         };
     }
+
 }
